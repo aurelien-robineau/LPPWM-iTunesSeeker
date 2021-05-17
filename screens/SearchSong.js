@@ -5,7 +5,7 @@ import RatingView from '../components/RatingView'
 
 import OMBdAPI from '../services/OMBdAPI'
 
-const SearchMusic = ({ navigation }) => {
+const SearchSong = ({ navigation }) => {
 	// const [research, setResearch] = useState(null)
 	// const [movie, setMovie] = useState(null)
 
@@ -161,4 +161,4 @@ const styles = StyleSheet.create({
 	}
 })
 
-export default SearchMusic
+export default SearchSong

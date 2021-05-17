@@ -2,148 +2,141 @@ import React, { useEffect, useState } from 'react'
 import { TextInput } from 'react-native'
 import { StyleSheet, FlatList, SafeAreaView, Text, View, StatusBar, Dimensions } from 'react-native'
 import { Picker } from '@react-native-community/picker'
-import MovieCard from '../components/MovieCard'
-import Movie from '../models/Movie'
-import CustomButton from '../components/CustomButton';
+import SongCard from '../components/SongCard'
+import Song from '../models/Song'
 
 const MyMusic = ({ navigation }) => {
-	// const [movies, setMovies] = useState([])
-	// const [moviesToDisplay, setMoviesToDisplay] = useState([])
-	// const [research, setResearch] = useState(null)
-	// const [filter, setFilter] = useState('id')
+	const [songs, setSongs] = useState([])
+	const [songsToDisplay, setSongsToDisplay] = useState([])
+	const [research, setResearch] = useState(null)
+	const [filter, setFilter] = useState('id')
 
-	// useEffect(() => {
-	// 	loadMovies()
-	// }, [])
+	useEffect(() => {
+		loadSongs()
+	}, [])
 
-	// useEffect(() => {
-	// 	const focus = navigation.addListener('focus', () => {
-	// 		loadMovies()
-	// 	})
+	useEffect(() => {
+		const focus = navigation.addListener('focus', () => {
+			loadSongs()
+		})
 
-	// 	return focus
-	// }, [navigation])
+		return focus
+	}, [navigation])
 
-	// useEffect(() => {
-	// 	setMoviesToDisplay([...moviesToDisplay.sort(movieComparator)])
-	// }, [filter])
+	useEffect(() => {
+		setSongsToDisplay([...songsToDisplay.sort(songComparator)])
+	}, [filter])
 
-	// const loadMovies = async () => {
-	// 	const userMovies = (await Movie.getAllForCurrentUser()).sort((a, b) => a.id < b.id)
-	// 	setMovies(userMovies)
-	// 	setMoviesToDisplay([...userMovies.sort(movieComparator)])
-	// }
+	const loadSongs = async () => {
+		const userSongs = (await Song.getAllForCurrentUser()).sort((a, b) => a.id < b.id)
+		setSongs(userSongs)
+		setSongsToDisplay([...userSongs.sort(songComparator)])
+	}
 
-	// const formatResearch = (research) => {
-	// 	return research
-	// 		.toLowerCase()
-	// 		.replace(/\s+/g, '_')
-	// }
+	const formatResearch = (research) => {
+		return research
+			.toLowerCase()
+			.replace(/\s+/g, '_')
+	}
 
-	// const searchMovie = (text) => {
-	// 	setResearch(text)
-	// 	if (text) {
-	// 		const formattedResearch = formatResearch(text)
-	// 		const matchingMovies = []
-	// 		movies.forEach(movie => {
-	// 			if (formatResearch(movie.title).includes(formattedResearch)) {
-	// 				matchingMovies.push(movie)
-	// 			}
-	// 		})
+	const searchSong = (text) => {
+		setResearch(text)
+		if (text) {
+			const formattedResearch = formatResearch(text)
+			const matchingSongs = []
+			songs.forEach(song => {
+				if (formatResearch(song.title).includes(formattedResearch)) {
+					matchingSongs.push(song)
+				}
+			})
 
-	// 		setMoviesToDisplay([...matchingMovies.sort(movieComparator)])
-	// 	}
-	// 	else {
-	// 		setMoviesToDisplay(movies)
-	// 	}
-	// }
+			setSongsToDisplay([...matchingSongs.sort(songComparator)])
+		}
+		else {
+			setSongsToDisplay(songs)
+		}
+	}
 
-	// const movieComparator = (a, b) => {
-	// 	switch(filter) {
-	// 		case 'id':
-	// 			return a.id < b.id
-	// 		case 'title':
-	// 			return a.title > b.title
-	// 		case 'rating':
-	// 			if (a.rating !== b.rating)
-	// 				return a.rating < b.rating
-	// 			return a.id < b.id
-	// 		case 'releaseDate':
-	// 			const aDate = new Date(a.releaseDate)
-	// 			const bDate = new Date(b.releaseDate)
-	// 			if (aDate !== bDate)
-	// 				return new Date(a.releaseDate) < new Date(b.releaseDate)
-	// 			return a.id < b.id
-	// 		default:
-	// 			return a.id < b.id
-	// 	}
-	// }
+	const songComparator = (a, b) => {
+		switch(filter) {
+			case 'id':
+				return a.id < b.id
+			case 'title':
+				return a.title > b.title
+			case 'rating':
+				if (a.rating !== b.rating)
+					return a.rating < b.rating
+				return a.id < b.id
+			case 'releaseDate':
+				const aDate = new Date(a.releaseDate)
+				const bDate = new Date(b.releaseDate)
+				if (aDate !== bDate)
+					return new Date(a.releaseDate) < new Date(b.releaseDate)
+				return a.id < b.id
+			default:
+				return a.id < b.id
+		}
+	}
 
-	// const renderMovie = ({ item }) => {
-	// 	return (
-	// 		<MovieCard
-	// 			movie={item}
-	// 			onPress={() => navigation.navigate('DisplayMovie', { name: item.title, id: item.id })}
-	// 		/>
-	// 	)
-	// }
+	const renderSong = ({ item }) => {
+		return (
+			<SongCard
+				song={item}
+				// onPress={() => navigation.navigate('DisplaySong', { name: item.title, id: item.id })}
+			/>
+		)
+	}
 
-	// return (
-	// 	<View style={styles.heightAuto}>
-	// 		{ movies.length ?
-	// 			<View style={styles.heightAuto}>
-	// 				<TextInput
-	// 					style={styles.input}
-	// 					placeholder="Recherche"
-	// 					onChangeText={searchMovie}
-	// 					value={research}
-	// 				/>
-	// 				<View style={styles.filtersContainer}>
-	// 					<Text style={{ fontSize: 16 }}>Trier par : </Text>
-	// 					<Picker
-	// 						selectedValue={filter}
-	// 						style={{ width: 170 }}
-	// 						onValueChange={setFilter}
-	// 						mode="dropdown"
-	// 					>
-	// 						<Picker.Item label="Identifiant" value="id" />
-	// 						<Picker.Item label="Titre" value="title" />
-	// 						<Picker.Item label="Note" value="rating" />
-	// 						<Picker.Item label="Date de sortie" value="releaseDate" />
-	// 					</Picker>
-	// 				</View>
+	return (
+		<View style={styles.heightAuto}>
+			{ songs.length ?
+				<View style={styles.heightAuto}>
+					<TextInput
+						style={styles.input}
+						placeholder="Recherche"
+						onChangeText={searchSong}
+						value={research}
+					/>
+					<View style={styles.filtersContainer}>
+						<Text style={{ fontSize: 16 }}>Trier par : </Text>
+						<Picker
+							selectedValue={filter}
+							style={{ width: 170 }}
+							onValueChange={setFilter}
+							mode="dropdown"
+						>
+							<Picker.Item label="Identifiant" value="id" />
+							<Picker.Item label="Titre" value="title" />
+							<Picker.Item label="Note" value="rating" />
+							<Picker.Item label="Date de sortie" value="releaseDate" />
+						</Picker>
+					</View>
 
-	// 				{moviesToDisplay.length ?
-	// 					<SafeAreaView style={[styles.listContainer, styles.heightAuto]}>
-	// 						<FlatList
-	// 							data={moviesToDisplay}
-	// 							renderItem={renderMovie}
-	// 							keyExtractor={item => item.id.toString()}
-	// 						/>
-	// 					</SafeAreaView>
-	// 					:
-	// 					<View style={styles.noMoviesContainer}>
-	// 						<Text style={styles.noMoviesText}>
-	// 							Aucun résultat
-	// 						</Text>
-	// 					</View>
-	// 				}
-	// 			</View>
-	// 			:
-	// 			<View style={styles.noMoviesContainer}>
-	// 				<Text style={styles.noMoviesText}>
-	// 					Pas de films...
-	// 				</Text>
-	// 				<CustomButton
-	// 					label="En créer un"
-	// 					onPress={() => navigation.navigate('CreateMovie')}
-	// 				/>
-	// 			</View>
-	// 		}
-	// 	</View>
-	// )
-
-	return <View></View>
+					{songsToDisplay.length ?
+						<SafeAreaView style={[styles.listContainer, styles.heightAuto]}>
+							<FlatList
+								data={songsToDisplay}
+								renderItem={renderSong}
+								keyExtractor={item => item.id.toString()}
+							/>
+						</SafeAreaView>
+						:
+						<View style={styles.noSongsContainer}>
+							<Text style={styles.noSongsText}>
+								Aucun résultat
+							</Text>
+						</View>
+					}
+				</View>
+				:
+				<View style={styles.noSongsContainer}>
+					<Text style={styles.noSongsText}>
+						Pas de musique par ici...
+					</Text>
+				</View>
+			}
+		</View>
+	)
 }
 
 const styles = StyleSheet.create({
@@ -176,13 +169,13 @@ const styles = StyleSheet.create({
 		paddingHorizontal: 8
 	},
 
-	noMoviesContainer: {
+	noSongsContainer: {
 		display: 'flex',
 		alignItems: 'center',
 		marginTop: 50
 	},
 
-	noMoviesText: {
+	noSongsText: {
 		fontSize: 18
 	}
 })

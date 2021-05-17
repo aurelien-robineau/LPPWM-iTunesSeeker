@@ -3,9 +3,9 @@ import { StyleSheet, View, Text, Image, ScrollView } from 'react-native'
 
 import CustomButton from '../components/CustomButton'
 import RatingView from '../components/RatingView'
-import Movie from '../models/Movie'
+import Movie from '../models/Song'
 
-const DisplayMusic = ({ navigation, route }) => {
+const DisplaySong = ({ navigation, route }) => {
 	// const [movie, setMovie] = useState(null)
 	
 	// useEffect(() => {
@@ -133,4 +133,4 @@ const styles = StyleSheet.create({
 	}
 })
 
-export default DisplayMusic
+export default DisplaySong

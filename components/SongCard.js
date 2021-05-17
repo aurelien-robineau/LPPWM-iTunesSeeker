@@ -3,17 +3,17 @@ import { StyleSheet, View, Text, Image, TouchableOpacity } from 'react-native'
 
 import RatingView from './RatingView'
 
-const MovieCard = ({ movie, onPress }) => {
+const SongCard = ({ song, onPress }) => {
   return (
 		<TouchableOpacity
 			style={styles.card}
-			onPress={() => onPress(movie.id)}
+			onPress={() => onPress(song.id)}
 		>
-			<Image style={styles.image} source={{ uri: movie.posterURI }}/>
-			<View style={styles.movieInfo}>
-				<Text style={styles.title}>{ movie.title }</Text>
+			<Image style={styles.image} source={{ uri: song.posterURI }}/>
+			<View style={styles.songInfo}>
+				<Text style={styles.title}>{ song.title }</Text>
 				<View style={styles.ratingContainer}>
-					<RatingView iconSize={30} value={movie.rating} />
+					<RatingView iconSize={30} value={song.rating} />
 				</View>
 			</View>
 		</TouchableOpacity>
@@ -44,7 +44,7 @@ const styles = StyleSheet.create({
 		width: 85
 	},
 
-	movieInfo: {
+	songInfo: {
 		marginLeft: 15,
 		width: '70%'
 	},
@@ -62,4 +62,4 @@ const styles = StyleSheet.create({
 	}
 })
 
-export default MovieCard
+export default SongCard

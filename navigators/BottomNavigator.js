@@ -3,7 +3,7 @@ import { createBottomTabNavigator } from '@react-navigation/bottom-tabs'
 import { Icon } from 'react-native-elements'
 
 import MyMusic from '../screens/MyMusic'
-import SearchMusic from '../screens/SearchMusic'
+import SearchSong from '../screens/SearchSong'
 
 const Tab = createBottomTabNavigator();
 
@@ -16,7 +16,7 @@ const BottomNavigator = () => {
 
 					if (route.name === 'MyMusic') {
 						iconName = 'music-note'
-					} else if (route.name === 'SearchMusic') {
+					} else if (route.name === 'SearchSong') {
 						iconName = 'search'
 					}
 
@@ -33,8 +33,8 @@ const BottomNavigator = () => {
 				options={{ title: 'Ma musique' }}
 			/>
 			<Tab.Screen
-				name="SearchMusic"
-				component={SearchMusic}
+				name="SearchSong"
+				component={SearchSong}
 				options={{ title: 'Recherche iTunes' }}
 			/>
 		</Tab.Navigator>
