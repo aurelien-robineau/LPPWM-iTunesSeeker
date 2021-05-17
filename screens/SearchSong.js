@@ -1,97 +1,84 @@
 import React, { useState } from 'react'
-import { StyleSheet, View, TextInput, Text, Image, ScrollView } from 'react-native'
+import { StyleSheet, View, TextInput, Text, Image, SafeAreaView, FlatList } from 'react-native'
+
 import CustomButton from '../components/CustomButton'
 import RatingView from '../components/RatingView'
-
-import OMBdAPI from '../services/OMBdAPI'
+import SongCard from '../components/SongCard'
+import Song from '../models/Song'
+import User from '../models/User'
+import iTunesAPI from '../services/iTunesAPI'
 
 const SearchSong = ({ navigation }) => {
-	// const [research, setResearch] = useState(null)
-	// const [movie, setMovie] = useState(null)
+	const [research, setResearch] = useState(null)
+	const [songs, setSongs] = useState(null)
 
-	// const formatResearch = () => {
-	// 	return research
-	// 		.toLowerCase()
-	// 		.replace(/\s+/g, '_')
-	// }
+	const formatResearch = () => {
+		return encodeURIComponent(research)
+	}
 
-	// const searchMusic = () => {
-	// 	if (research) {
-	// 		OMBdAPI.getMovieByName(formatResearch(research))
-	// 			.then(res => {
-	// 				if (res.data.Response === 'True') {
-	// 					console.log(res.data.Released)
-	// 					setMovie({
-	// 						imdbLink: `https://www.imdb.com/title/${res.data.imdbID}`,
-	// 						posterURI: res.data.Poster,
-	// 						title: res.data.Title,
-	// 						director : res.data.Director,
-	// 						rating: Math.round(Number.parseFloat(res.data.imdbRating) / 2),
-	// 						releaseDate: res.data.Released !== 'N/A' ? new Date(res.data.Released) : null,
-	// 						summary: res.data.Plot
-	// 					})
-	// 				}
-	// 				else {
-	// 					setMovie(null)
-	// 				}
-	// 			})
-	// 	}
-	// }
+	const searchSongs = async () => {
+		if (research) {
+			const user = await User.getCurrentUser()
+			iTunesAPI.searchSongs(formatResearch(research))
+				.then(res => {
+					console.log(res.data.results[0])
+					setSongs(res.data.results.map(song => new Song(
+						song.trackName,
+						song.collectionName,
+						song.artistName,
+						Math.round(song.trackTimeMillis / 1000),
+						song.artworkUrl100,
+						song.releaseDate,
+						null,
+						user.id,
+						song.trackId
+					)))
+				})
+		}
+	}
+	
+	const renderSong = ({ item }) => {
+		return (
+			<SongCard
+				song={item}
+				// onPress={() => navigation.navigate('DisplaySong', { name: item.title, id: item.id })}
+				isSearchResult={true}
+			/>
+		)
+	}
 
-	// return (
-	// 	<ScrollView style={styles.container}>
-	// 		<TextInput
-	// 			style={styles.input}
-	// 			placeholder="Recherche"
-	// 			onChangeText={setResearch}
-	// 			onEndEditing={searchMusic}
-	// 			value={research}
-	// 		/>
-	// 		{movie ?
-	// 			<View style={styles.movie}>
-	// 				<View style={styles.posterContainer}>
-	// 					<Image style={styles.poster} source={{ uri: movie.posterURI }}/>
-	// 				</View>
-
-	// 				<Text style={styles.title}>{ movie.title }</Text>
-	// 				<Text style={styles.director}>{ movie.director }</Text>
-	// 				<View style={styles.ratingWrapper}>
-	// 					<RatingView
-	// 						iconSize={30}
-	// 						value={movie.rating}
-	// 					/>
-	// 				</View>
-
-	// 				{movie.releaseDate &&
-	// 					<Text style={styles.date}>Sorti le { movie.releaseDate.toLocaleDateString() }</Text>
-	// 				}
-
-	// 				<Text style={styles.summary}>{ movie.summary }</Text>
-
-	// 				<View style={styles.controlsContainer}>
-	// 					<CustomButton
-	// 						label="Ajouter à ma liste"
-	// 						onPress={() => navigation.navigate('CreateMovie', {
-	// 							movie: null,
-	// 							defaults: {
-	// 								title: movie.title,
-	// 								posterURI: movie.posterURI,
-	// 								releaseDate: movie.releaseDate ? movie.releaseDate.toISOString() : null,
-	// 								summary: movie.summary,
-	// 								rating: movie.rating,
-	// 								imdbLink: movie.imdbLink
-	// 							}
-	// 						})}
-	// 					/>
-	// 				</View>
-	// 			</View>
-	// 			:
-	// 			<Text style={styles.noResults}>Aucun résultat</Text>
-	// 		}
-	// 	</ScrollView>
-	// )
-
-	return <View></View>
+	return (
+		<>
+			<View style={styles.container}>
+				<TextInput
+					style={styles.input}
+					placeholder="Recherche"
+					onChangeText={setResearch}
+					onEndEditing={searchSongs}
+					value={research}
+				/>
+			</View>
+			<SafeAreaView>
+				{songs ?
+					songs.length !== 0 ?
+						<FlatList
+							style={styles.list}
+							data={songs}
+							renderItem={renderSong}
+							keyExtractor={item => item.id.toString()}
+						/>
+						:
+						<View style={styles.container}>
+							<Text style={styles.noResults}>Aucun résultat</Text>
+						</View>
+					:
+					<View style={styles.container}>
+						<Text style={styles.noResults}>Les résultats de la recherche s'afficheront ici</Text>
+					</View>
+				}
+			</SafeAreaView>
+		</>
+	)
 }
 
 const styles = StyleSheet.create({
@@ -105,59 +92,19 @@ const styles = StyleSheet.create({
 		paddingHorizontal: 20,
 		paddingVertical: 18,
 		fontSize: 18,
-		marginTop: 20
+		marginTop: 20,
+		marginBottom: 20
 	},
 
-	movie: {
-		marginTop: 20
-	},
-
-	posterContainer: {
-		display: 'flex',
-		alignItems: 'center',
-		backgroundColor: '#999999'
-	},
-
-	poster: {
-		width: 130,
-		height: 200
-	},
-
-	title: {
-		fontSize: 22,
-		fontWeight: 'bold',
-		marginTop: 5
-	},
-
-	director: {
-		fontSize: 18,
-		color: '#999999'
-	},
-
-	ratingWrapper: {
-		width: '45%'
-	},
-
-	date: {
-		fontSize: 16,
-		fontStyle: 'italic'
-	},
-
-	summary: {
-		fontSize: 16,
-		marginTop: 20
+	list: {
+		paddingHorizontal: 20,
+		marginBottom: 110
 	},
 
 	noResults: {
-		fontSize: 20,
 		textAlign: 'center',
-		marginTop: 50
-	},
-
-	controlsContainer: {
-		display: 'flex',
-		alignItems: 'center',
-		marginVertical: 20
+		marginTop: 50,
+		fontSize: 20
 	}
 })
 

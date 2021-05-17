@@ -3,11 +3,13 @@ import AsyncStorage from '@react-native-async-storage/async-storage'
 import User from './User'
 
 export default class Song {
-	constructor(title, album, artist, releaseDate, rating, userId, id = null) {
+	constructor(title, album, artist, duration, artworkURL, releaseDate, rating, userId, id = null) {
 		this.id          = id ?? null
 		this.title       = title
 		this.album       = album
 		this.artist      = artist,
+		this.duration    = duration,
+		this.artworkURL  = artworkURL,
 		this.releaseDate = releaseDate ? new Date(releaseDate) : null
 		this.rating      = rating
 		this.userId      = userId
@@ -19,6 +21,8 @@ export default class Song {
 			JSON.title,
 			JSON.album,
 			JSON.artist,
+			JSON.duration,
+			JSON.artworkURL,
 			JSON.releaseDate,
 			JSON.rating,
 			JSON.userId,

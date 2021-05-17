@@ -3,18 +3,21 @@ import { StyleSheet, View, Text, Image, TouchableOpacity } from 'react-native'
 
 import RatingView from './RatingView'
 
-const SongCard = ({ song, onPress }) => {
+const SongCard = ({ song, onPress, isSearchResult = false }) => {
   return (
 		<TouchableOpacity
 			style={styles.card}
-			onPress={() => onPress(song.id)}
+			// onPress={() => onPress(song.id)}
 		>
-			<Image style={styles.image} source={{ uri: song.posterURI }}/>
+			<Image style={styles.image} source={{ uri: song.artworkURL }}/>
 			<View style={styles.songInfo}>
 				<Text style={styles.title}>{ song.title }</Text>
-				<View style={styles.ratingContainer}>
-					<RatingView iconSize={30} value={song.rating} />
-				</View>
+				<Text style={styles.artist}>{ song.artist }</Text>
+				{ !isSearchResult &&
+					<View style={styles.ratingContainer}>
+						<RatingView iconSize={30} value={song.rating} />
+					</View>
+				}
 			</View>
 		</TouchableOpacity>
   )
@@ -51,6 +54,11 @@ const styles = StyleSheet.create({
 
 	title: {
 		fontSize: 20
+	},
+
+	artist: {
+		fontSize: 18,
+		color: '#858585'
 	},
 
 	ratingContainer: {
