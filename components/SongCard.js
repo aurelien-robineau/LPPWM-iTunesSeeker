@@ -3,17 +3,17 @@ import { StyleSheet, View, Text, Image, TouchableOpacity } from 'react-native'
 
 import RatingView from './RatingView'
 
-const SongCard = ({ song, onPress, isSearchResult = false }) => {
+const SongCard = ({ song, onPress }) => {
   return (
 		<TouchableOpacity
 			style={styles.card}
-			// onPress={() => onPress(song.id)}
+			onPress={() => onPress(song.id)}
 		>
 			<Image style={styles.image} source={{ uri: song.artworkURL }}/>
 			<View style={styles.songInfo}>
 				<Text style={styles.title}>{ song.title }</Text>
 				<Text style={styles.artist}>{ song.artist }</Text>
-				{ !isSearchResult &&
+				{ song.rating !== null &&
 					<View style={styles.ratingContainer}>
 						<RatingView iconSize={30} value={song.rating} />
 					</View>

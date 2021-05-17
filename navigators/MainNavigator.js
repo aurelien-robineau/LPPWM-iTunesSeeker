@@ -3,6 +3,7 @@ import { TouchableOpacity } from 'react-native'
 import { Icon } from 'react-native-elements'
 import { createStackNavigator } from '@react-navigation/stack'
 
+import DisplaySong from '../screens/DisplaySong'
 import Settings from '../screens/Settings'
 import BottomNavigator from './BottomNavigator'
 
@@ -27,6 +28,13 @@ const MainNavigator = () => {
 						</TouchableOpacity>
 					)
 				})}/>
+			<Stack.Screen
+				name="DisplaySong"
+				component={DisplaySong}
+				options={({ route }) => ({
+					title: route.params.name,
+				})}
+			/>
 			<Stack.Screen
 				name="Settings"
 				component={Settings}
