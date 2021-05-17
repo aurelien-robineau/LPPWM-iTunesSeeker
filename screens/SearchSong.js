@@ -1,8 +1,6 @@
 import React, { useState } from 'react'
-import { StyleSheet, View, TextInput, Text, Image, SafeAreaView, FlatList } from 'react-native'
+import { StyleSheet, View, TextInput, Text, SafeAreaView, FlatList } from 'react-native'
 
-import CustomButton from '../components/CustomButton'
-import RatingView from '../components/RatingView'
 import SongCard from '../components/SongCard'
 import Song from '../models/Song'
 import User from '../models/User'
@@ -21,7 +19,6 @@ const SearchSong = ({ navigation }) => {
 			const user = await User.getCurrentUser()
 			iTunesAPI.searchSongs(formatResearch(research))
 				.then(res => {
-					console.log(res.data.results[0])
 					setSongs(res.data.results.map(song => new Song(
 						song.trackId,
 						song.trackName,

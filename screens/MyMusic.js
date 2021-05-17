@@ -9,7 +9,6 @@ const MyMusic = ({ navigation }) => {
 	const [songs, setSongs] = useState([])
 	const [songsToDisplay, setSongsToDisplay] = useState([])
 	const [research, setResearch] = useState(null)
-	const [filter, setFilter] = useState('id')
 
 	useEffect(() => {
 		loadSongs()
@@ -23,14 +22,10 @@ const MyMusic = ({ navigation }) => {
 		return focus
 	}, [navigation])
 
-	useEffect(() => {
-		setSongsToDisplay([...songsToDisplay.sort(songComparator)])
-	}, [filter])
-
 	const loadSongs = async () => {
 		const userSongs = (await Song.getAllForCurrentUser()).sort((a, b) => a.id < b.id)
 		setSongs(userSongs)
-		setSongsToDisplay([...userSongs.sort(songComparator)])
+		setSongsToDisplay([...userSongs])
 	}
 
 	const formatResearch = (research) => {
@@ -50,31 +45,10 @@ const MyMusic = ({ navigation }) => {
 				}
 			})
 
-			setSongsToDisplay([...matchingSongs.sort(songComparator)])
+			setSongsToDisplay([...matchingSongs])
 		}
 		else {
 			setSongsToDisplay(songs)
-		}
-	}
-
-	const songComparator = (a, b) => {
-		switch(filter) {
-			case 'id':
-				return a.id < b.id
-			case 'title':
-				return a.title > b.title
-			case 'rating':
-				if (a.rating !== b.rating)
-					return a.rating < b.rating
-				return a.id < b.id
-			case 'releaseDate':
-				const aDate = new Date(a.releaseDate)
-				const bDate = new Date(b.releaseDate)
-				if (aDate !== bDate)
-					return new Date(a.releaseDate) < new Date(b.releaseDate)
-				return a.id < b.id
-			default:
-				return a.id < b.id
 		}
 	}
 
@@ -97,21 +71,6 @@ const MyMusic = ({ navigation }) => {
 						onChangeText={searchSong}
 						value={research}
 					/>
-					<View style={styles.filtersContainer}>
-						<Text style={{ fontSize: 16 }}>Trier par : </Text>
-						<Picker
-							selectedValue={filter}
-							style={{ width: 170 }}
-							onValueChange={setFilter}
-							mode="dropdown"
-						>
-							<Picker.Item label="Identifiant" value="id" />
-							<Picker.Item label="Titre" value="title" />
-							<Picker.Item label="Note" value="rating" />
-							<Picker.Item label="Date de sortie" value="releaseDate" />
-						</Picker>
-					</View>
-
 					{songsToDisplay.length ?
 						<SafeAreaView style={[styles.listContainer, styles.heightAuto]}>
 							<FlatList
@@ -155,16 +114,8 @@ const styles = StyleSheet.create({
 		marginHorizontal: 10
 	},
 
-	filtersContainer: {
-		display: 'flex',
-		flexDirection: 'row',
-		alignItems: 'center',
-		marginHorizontal: 10,
-		marginTop: 10
-	},
-
 	listContainer: {
-		paddingBottom: 195,
+		paddingBottom: 140,
 		paddingTop: 5,
 		paddingHorizontal: 8
 	},
