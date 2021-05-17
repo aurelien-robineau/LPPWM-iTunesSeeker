@@ -15,7 +15,7 @@ const MainNavigator = () => {
 				name="Home"
 				component={BottomNavigator}
 				options={({ navigation }) => ({
-					title: 'MovieRater',
+					title: 'iTunes Seeker',
 					headerRight: () => (
 						<TouchableOpacity onPress={() => navigation.navigate('Settings')}>
 							<Icon

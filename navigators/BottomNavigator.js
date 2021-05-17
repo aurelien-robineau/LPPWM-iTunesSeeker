@@ -2,10 +2,8 @@ import React from 'react'
 import { createBottomTabNavigator } from '@react-navigation/bottom-tabs'
 import { Icon } from 'react-native-elements'
 
-import MoviesList from '../screens/MoviesList'
-import CreateMovie from '../screens/CreateMovie'
-import DisplayMovie from '../screens/DisplayMovie'
-import SearchMovie from './../screens/SearchMovie';
+import MyMusic from '../screens/MyMusic'
+import SearchMusic from '../screens/SearchMusic'
 
 const Tab = createBottomTabNavigator();
 
@@ -16,13 +14,9 @@ const BottomNavigator = () => {
 				tabBarIcon: ({ color, size }) => {
 					let iconName;
 
-					if (route.name === 'Home') {
-					iconName = 'bookmark'
-					} else if (route.name === 'DisplayMovie') {
-						iconName = 'movie'
-					} else if (route.name === 'CreateMovie') {
-						iconName = 'add'
-					} else if (route.name === 'SearchMovie') {
+					if (route.name === 'MyMusic') {
+						iconName = 'music-note'
+					} else if (route.name === 'SearchMusic') {
 						iconName = 'search'
 					}
 
@@ -34,24 +28,14 @@ const BottomNavigator = () => {
 				inactiveTintColor: 'gray',
 			}}>
 			<Tab.Screen
-				name="Home"
-				component={MoviesList}
-				options={{ title: 'Mes films' }}
+				name="MyMusic"
+				component={MyMusic}
+				options={{ title: 'Ma musique' }}
 			/>
 			<Tab.Screen
-				name="DisplayMovie"
-				component={DisplayMovie}
-				options={{ title: 'Film' }}
-			/>
-			<Tab.Screen
-				name="CreateMovie"
-				component={CreateMovie}
-				options={{ title: 'Nouveau film' }}
-			/>
-			<Tab.Screen
-				name="SearchMovie"
-				component={SearchMovie}
-				options={{ title: 'Recherche IMDB' }}
+				name="SearchMusic"
+				component={SearchMusic}
+				options={{ title: 'Recherche iTunes' }}
 			/>
 		</Tab.Navigator>
 	);

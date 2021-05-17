@@ -13,7 +13,7 @@ export default class User {
 	}
 
 	async save () {
-		const value = await AsyncStorage.getItem('@users')
+		const value = await AsyncStorage.getItem('@itunes-seeker-users')
 		let users = value ? JSON.parse(value) : []
 
 		const lastId = (await User.getLastId()) + 1
@@ -22,17 +22,17 @@ export default class User {
 
 		users.push(this)
 
-		await AsyncStorage.setItem('@users', JSON.stringify(users))
+		await AsyncStorage.setItem('@itunes-seeker-users', JSON.stringify(users))
 	}
 
 	static async login(username, password) {
-		const value = await AsyncStorage.getItem('@users')
+		const value = await AsyncStorage.getItem('@itunes-seeker-users')
 		const users = value ? JSON.parse(value) : []
 
 		const JSONUser = users.filter(user => user.username === username)[0] ?? null
 
 		if (JSONUser && bcrypt.compareSync(password, JSONUser.password)) {
-			await AsyncStorage.setItem('@user', JSON.stringify({
+			await AsyncStorage.setItem('@itunes-seeker-user', JSON.stringify({
 				id: JSONUser.id,
 				username: JSONUser.username
 			}))
@@ -44,7 +44,7 @@ export default class User {
 	}
 
 	static async isUsernameAvailable(username) {
-		const value = await AsyncStorage.getItem('@users')
+		const value = await AsyncStorage.getItem('@itunes-seeker-users')
 		let users = value ? JSON.parse(value) : []
 
 		for (let user of users) {
@@ -56,23 +56,23 @@ export default class User {
 	}
 
 	static async logout() {
-		await AsyncStorage.removeItem('@user')
+		await AsyncStorage.removeItem('@itunes-seeker-user')
 		User.onLogout()
 	}
 
 	static async getCurrentUser() {
-		const value = await AsyncStorage.getItem('@user')
+		const value = await AsyncStorage.getItem('@itunes-seeker-user')
 		const JSONUser = value ? JSON.parse(value) : null
 		return JSONUser ? new User(JSONUser.username, null, JSONUser.id) : null
 	}
 
 	static async getLastId() {
-		const lastId = (await AsyncStorage.getItem('@lastUserId')) ?? null
+		const lastId = (await AsyncStorage.getItem('@itunes-seeker-last-user-id')) ?? null
 		return lastId ? Number.parseInt(lastId) : 0
 	}
 
 	static async setLastId(id) {
-		await AsyncStorage.setItem('@lastUserId', id.toString())
+		await AsyncStorage.setItem('@itunes-seeker-last-user-id', id.toString())
 	}
 
 	static setOnLogout(onLogout) {
