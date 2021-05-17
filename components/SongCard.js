@@ -7,7 +7,7 @@ const SongCard = ({ song, onPress }) => {
   return (
 		<TouchableOpacity
 			style={styles.card}
-			onPress={() => onPress(song.id)}
+			onPress={() => typeof onPress === 'function' ? onPress(song.id) : null}
 		>
 			<Image style={styles.image} source={{ uri: song.artworkURL }}/>
 			<View style={styles.songInfo}>

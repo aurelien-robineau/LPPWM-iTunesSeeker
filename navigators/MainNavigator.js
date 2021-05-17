@@ -32,7 +32,7 @@ const MainNavigator = () => {
 				name="DisplaySong"
 				component={DisplaySong}
 				options={({ route }) => ({
-					title: route.params.name,
+					title: route.params.song.title,
 				})}
 			/>
 			<Stack.Screen

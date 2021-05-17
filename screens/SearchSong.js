@@ -39,7 +39,7 @@ const SearchSong = ({ navigation }) => {
 		return (
 			<SongCard
 				song={item}
-				onPress={() => navigation.navigate('DisplaySong', { name: item.title, song: item })}
+				onPress={() => navigation.navigate('DisplaySong', { song: item })}
 			/>
 		)
 	}
