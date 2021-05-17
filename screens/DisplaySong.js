@@ -2,12 +2,13 @@ import React, { useState, useEffect } from 'react'
 import { StyleSheet, View, Text, Image, ScrollView } from 'react-native'
 
 import CustomButton from '../components/CustomButton'
-import RatingView from '../components/RatingView'
 import Song from '../models/Song'
+import RatingInput from '../components/RatingInput'
 
 const DisplaySong = ({ navigation, route }) => {
 	const [song, setSong] = useState(null)
 	const [isSaved, setIsSaved] = useState(null)
+	const [rating, setRating] = useState(route.params.song.rating ?? 0)
 	
 	useEffect(() => {
 		initSong()
@@ -19,8 +20,9 @@ const DisplaySong = ({ navigation, route }) => {
 		setIsSaved(localSong !== null)
 	}
 
-	const addToMyList = () => {
+	const saveSong = () => {
 		if (song) {
+			song.rating = rating
 			song.save()
 			setIsSaved(true)
 		}
@@ -29,6 +31,7 @@ const DisplaySong = ({ navigation, route }) => {
 	const removeFromMyList = () => {
 		if (song) {
 			Song.deleteById(song.id)
+			setRating(0)
 			setIsSaved(false)
 		}
 	}
@@ -66,25 +69,31 @@ const DisplaySong = ({ navigation, route }) => {
 					<Text style={styles.value}>{ song.releaseDate.toLocaleDateString() }</Text>
 				</View>
 
+				<Text style={styles.myRatingLabel}>Ma note</Text>
+				<View style={styles.ratingWrapper}>
+					<RatingInput iconSize={45} onChange={setRating} value={rating} />
+				</View>
 
 				<View style={styles.controlsContainer}>
 					{isSaved ?
-						<CustomButton
-							label="Retirer de ma liste"
-							onPress={removeFromMyList}
-							style={{ backgroundColor: '#ff4a4a' }}
-						/>
+						<>
+							<CustomButton
+								label="Sauvegarder"
+								onPress={saveSong}
+							/>
+							<CustomButton
+								label="Retirer de ma liste"
+								onPress={removeFromMyList}
+								style={{ backgroundColor: '#ff4a4a' }}
+							/>
+						</>
 						:
 						<CustomButton
 							label="Ajouter à ma liste"
-							onPress={addToMyList}
+							onPress={saveSong}
 						/>
 					}
 				</View>
-
-								{/* <View style={styles.ratingWrapper}>
-					<RatingView iconSize={30} value={song.rating} />
-				</View> */}
 			</View>
 		</ScrollView>
 	)
@@ -95,9 +104,15 @@ const styles = StyleSheet.create({
 		paddingHorizontal: 10
 	},
 
+	myRatingLabel: {
+		textAlign: 'center',
+		fontSize: 20,
+		marginTop: 20
+	},
+
 	ratingWrapper: {
-		maxWidth: '45%',
-		marginBottom: 10
+		width: '60%',
+		marginLeft: '20%',
 	},
 
 	artworkContainer: {
