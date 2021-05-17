@@ -23,15 +23,13 @@ const SearchSong = ({ navigation }) => {
 				.then(res => {
 					console.log(res.data.results[0])
 					setSongs(res.data.results.map(song => new Song(
+						song.trackId,
 						song.trackName,
 						song.collectionName,
 						song.artistName,
 						Math.round(song.trackTimeMillis / 1000),
 						song.artworkUrl100,
-						song.releaseDate,
-						null,
-						user.id,
-						song.trackId
+						song.releaseDate
 					)))
 				})
 		}

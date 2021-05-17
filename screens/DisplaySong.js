@@ -7,10 +7,31 @@ import Song from '../models/Song'
 
 const DisplaySong = ({ navigation, route }) => {
 	const [song, setSong] = useState(null)
+	const [isSaved, setIsSaved] = useState(null)
 	
 	useEffect(() => {
-		setSong(route.params.song)
+		initSong()
 	}, [route.params.song])
+
+	const initSong = async () => {
+		const localSong = await Song.getById(route.params.song.id)
+		setSong(route.params.song)
+		setIsSaved(localSong !== null)
+	}
+
+	const addToMyList = () => {
+		if (song) {
+			song.save()
+			setIsSaved(true)
+		}
+	}
+
+	const removeFromMyList = () => {
+		if (song) {
+			Song.deleteById(song.id)
+			setIsSaved(false)
+		}
+	}
 
 	const formatDuration = (secondsTotal) => {
 		const minutes = Math.floor(secondsTotal / 60)
@@ -46,18 +67,20 @@ const DisplaySong = ({ navigation, route }) => {
 				</View>
 
 
-				{/* <View style={styles.controlsContainer}>
-					<CustomButton
-						label="Modifier"
-						onPress={editMovie}
-					/>
-
-					<CustomButton
-						label="Supprimer"
-						onPress={deleteMovie}
-						style={{ backgroundColor: '#ff4a4a' }}
-					/>
-				</View> */}
+				<View style={styles.controlsContainer}>
+					{isSaved ?
+						<CustomButton
+							label="Retirer de ma liste"
+							onPress={removeFromMyList}
+							style={{ backgroundColor: '#ff4a4a' }}
+						/>
+						:
+						<CustomButton
+							label="Ajouter à ma liste"
+							onPress={addToMyList}
+						/>
+					}
+				</View>
 
 								{/* <View style={styles.ratingWrapper}>
 					<RatingView iconSize={30} value={song.rating} />

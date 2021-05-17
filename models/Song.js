@@ -3,8 +3,8 @@ import AsyncStorage from '@react-native-async-storage/async-storage'
 import User from './User'
 
 export default class Song {
-	constructor(title, album, artist, duration, artworkURL, releaseDate, rating, userId, id = null) {
-		this.id          = id ?? null
+	constructor(id, title, album, artist, duration, artworkURL, releaseDate, rating = null, userId = null) {
+		this.id          = id
 		this.title       = title
 		this.album       = album
 		this.artist      = artist,
@@ -25,25 +25,20 @@ export default class Song {
 			JSON.artworkURL,
 			JSON.releaseDate,
 			JSON.rating,
-			JSON.userId,
-			JSON.id
+			JSON.userId
 		)
 	}
 
 	async save() {
+		const user = await User.getCurrentUser()
+
 		const value = await AsyncStorage.getItem('@itunes-seeker-songs')
 		let songs = value ? JSON.parse(value) : []
 
-		if (this.id === null) {
-			const lastId = (await Song.getLastId()) + 1
-			this.id = lastId
-			await Song.setLastId(lastId)
-			songs.push(this)
-		}
-		else {
-			songs = songs.filter(song => song.id !== this.id)
-			songs.push(this)
-		}
+		this.userId = user.id
+
+		songs = songs.filter(song => song.id !== this.id)
+		songs.push(this)
 
 		await AsyncStorage.setItem('@itunes-seeker-songs', JSON.stringify(songs))
 	}
@@ -61,7 +56,7 @@ export default class Song {
 		const JSONSong = songs.filter(song => song.id === id)[0] ?? null
 
 		if (JSONSong) {
-			return Movie.createFromJSON(JSONSong)
+			return Song.createFromJSON(JSONSong)
 		}
 
 		return null
@@ -81,14 +76,5 @@ export default class Song {
 		}
 
 		return []
-	}
-
-	static async getLastId() {
-		const lastId = (await AsyncStorage.getItem('@itunes-seeker-last-song-id')) ?? null
-		return lastId ? Number.parseInt(lastId) : 0
-	}
-
-	static async setLastId(id) {
-		await AsyncStorage.setItem('@itunes-seeker-last-song-id', id.toString())
 	}
 }
